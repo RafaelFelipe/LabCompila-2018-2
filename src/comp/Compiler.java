@@ -1,4 +1,3 @@
-
 package comp;
 
 import java.io.PrintWriter;
@@ -167,7 +166,7 @@ public class Compiler {
 
 	}
 
-	private void memberList() {
+	private void memberList() { // sintático done
 		while ( true ) {
 			qualifier();
 			if ( lexer.token == Token.VAR ) {
@@ -200,19 +199,18 @@ public class Compiler {
 		lexer.nextToken();
 		if ( lexer.token == Token.ID ) {
 			// unary method
-			lexer.nextToken();
-
+			next();
 		}
 		else if ( lexer.token == Token.IDCOLON ) {
 			// keyword method. It has parameters
-
+			formalParamDec();
 		}
 		else {
 			error("An identifier or identifer: was expected after 'func'");
 		}
 		if ( lexer.token == Token.MINUS_GT ) {
 			// method declared a return type
-			lexer.nextToken();
+			next();
 			type();
 		}
 		if ( lexer.token != Token.LEFTCURBRACKET ) {
@@ -225,6 +223,18 @@ public class Compiler {
 		}
 		next();
 
+	}
+	
+	private void formalParamDecl() {
+		paramDec();
+		
+		while(true){
+			if(lexer.token == Token.COMMA){
+				next();
+				paramDec();
+			}else
+				break;
+		}
 	}
 
 	private void statementList() {
